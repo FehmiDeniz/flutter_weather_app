@@ -13,6 +13,7 @@ class WeatherProvider with ChangeNotifier {
     notifyListeners();
 
     response = (await getCurrentData(context));
+    var asd = context.toString();
     isLoading = false;
     notifyListeners();
 

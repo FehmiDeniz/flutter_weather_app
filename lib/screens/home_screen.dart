@@ -82,7 +82,7 @@ class _homeScreenState extends State<homeScreen> {
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Icon(
+                          const Icon(
                             Icons.location_on_rounded,
                             size: 24,
                           ),
@@ -107,9 +107,14 @@ class _homeScreenState extends State<homeScreen> {
                               return IconButton(
                                   onPressed: () {
                                     lct = locateController.text;
-                                    value.getWeatherData(lct);
-                                    print(lct);
-                                    value.getDataHourly(lct);
+                                    if (lct == "") {
+                                      AlertMessage(context);
+                                    } else {
+                                      // lct = locateController.text;
+                                      value.getWeatherData(lct);
+                                      print(lct);
+                                      value.getDataHourly(lct);
+                                    }
                                   },
                                   icon: const Icon(Icons.search));
                             },
@@ -446,13 +451,30 @@ class _homeScreenState extends State<homeScreen> {
       },
     );
   }
+
+  Future<dynamic> AlertMessage(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              title: const Text("Lütfen Geçerli Bir Değer Giriniz"),
+              content: const Text("Şehir Alanı Boş Olamaz!"),
+              actions: <Widget>[
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text("Tamam"),
+                ),
+              ],
+            ));
+  }
 }
 
-const _shimmerGradient = LinearGradient(
+LinearGradient _shimmerGradient = LinearGradient(
   colors: [
     Color(0xFFEBEBF4),
-    Color(0xFFF4F4F4),
-    Color(0xFFEBEBF4),
+    Colors.blueGrey.shade50,
+    Colors.blueGrey.shade200,
   ],
   stops: [
     0.1,
@@ -461,5 +483,5 @@ const _shimmerGradient = LinearGradient(
   ],
   begin: Alignment(-1.0, -0.3),
   end: Alignment(1.0, 0.3),
-  tileMode: TileMode.clamp,
+  tileMode: TileMode.repeated,
 );
