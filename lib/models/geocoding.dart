@@ -1,4 +1,4 @@
-class CurrentWeatherModel {
+class geocodingModel {
   Coord? coord;
   List<Weather>? weather;
   String? base;
@@ -6,14 +6,14 @@ class CurrentWeatherModel {
   int? visibility;
   Wind? wind;
   Clouds? clouds;
-  int? dt;
+  dynamic dt;
   Sys? sys;
   int? timezone;
   int? id;
   String? name;
   int? cod;
 
-  CurrentWeatherModel(
+  geocodingModel(
       {this.coord,
       this.weather,
       this.base,
@@ -28,7 +28,7 @@ class CurrentWeatherModel {
       this.name,
       this.cod});
 
-  CurrentWeatherModel.fromJson(Map<String, dynamic> json) {
+  geocodingModel.fromJson(Map<String, dynamic> json) {
     coord = json['coord'] != null ? new Coord.fromJson(json['coord']) : null;
     if (json['weather'] != null) {
       weather = <Weather>[];
@@ -82,8 +82,8 @@ class CurrentWeatherModel {
 }
 
 class Coord {
-  double? lon;
-  double? lat;
+  dynamic lon;
+  dynamic lat;
 
   Coord({this.lon, this.lat});
 
@@ -94,8 +94,8 @@ class Coord {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['lon'] = this.lon;
-    data['lat'] = this.lat;
+    data['lon'] = lon;
+    data['lat'] = lat;
     return data;
   }
 }
@@ -128,10 +128,10 @@ class Weather {
 class Main {
   dynamic temp;
   dynamic feelsLike;
-  dynamic tempMin;
-  dynamic tempMax;
-  dynamic pressure;
-  dynamic humidity;
+  dynamic? tempMin;
+  dynamic? tempMax;
+  int? pressure;
+  int? humidity;
 
   Main(
       {this.temp,

@@ -1,20 +1,24 @@
 import 'package:flutter/cupertino.dart';
-import 'package:weather_myapp/models/current_reader_response.dart';
+
+import 'package:weather_myapp/models/geocoding.dart';
 import 'package:weather_myapp/models/hovercast_reader.dart';
 import 'package:weather_myapp/service/api_service.dart';
 
 class WeatherProvider with ChangeNotifier {
-  CurrentWeatherModel response = CurrentWeatherModel();
-  bool isLoading = true;
-  bool isHourlyLoaded = false;
+  geocodingModel response = geocodingModel();
+  bool isCurrentLoading = false;
+  bool isHourlyLoading = false;
+  bool isDailyLoading = false;
 
   getWeatherData(context) async {
-    isLoading = true;
+    isCurrentLoading = false;
     notifyListeners();
 
-    response = (await getCurrentData(context));
-    var asd = context.toString();
-    isLoading = false;
+    response = (await getCurrentData(
+      context,
+    ))!;
+
+    isCurrentLoading = true;
     notifyListeners();
 
     //
@@ -23,13 +27,14 @@ class WeatherProvider with ChangeNotifier {
   HovercastReader hresponse = HovercastReader();
 
   getDataHourly(context) async {
-    isHourlyLoaded = false;
+    isHourlyLoading = false;
+    isDailyLoading = false;
+
     notifyListeners();
-    print(isHourlyLoaded);
 
     hresponse = (await getHourlyData(context))!;
-    isHourlyLoaded = true;
+    isHourlyLoading = true;
+    isDailyLoading = true;
     notifyListeners();
-    print(isHourlyLoaded);
   }
 }

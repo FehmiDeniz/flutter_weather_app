@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final HovercastReader = HovercastReaderFromJson(jsonString);
-
 import 'dart:convert';
 
 HovercastReader HovercastReaderFromJson(String str) =>
@@ -122,7 +118,7 @@ class ListElement {
     this.rain,
   });
 
-  int? dt;
+  dynamic? dt;
   MainClass? main;
   List<Weather>? weather;
   Clouds? clouds;
