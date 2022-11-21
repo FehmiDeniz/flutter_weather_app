@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 import 'package:intl/intl.dart';
@@ -116,7 +117,13 @@ class _homeScreenState extends State<homeScreen> {
 
                                       print(context);
                                       // print(value.response.coord!.lat);
-
+                                      if (value.hresponse.runtimeType ==
+                                          DioError) {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(SnackBar(
+                                                content: Text(
+                                                    value.hresponse.message)));
+                                      }
                                     }
                                   },
                                   icon: const Icon(Icons.search));
@@ -317,7 +324,12 @@ class _homeScreenState extends State<homeScreen> {
                                                 color: Colors.white),
                                           ),
                                           Text(
-                                            "${value.hresponse.list![index].dtTxt.toString().split(" ").last.toString().substring(0, 5)}",
+                                            value.hresponse.list![index].dtTxt
+                                                .toString()
+                                                .split(" ")
+                                                .last
+                                                .toString()
+                                                .substring(0, 5),
                                             style:
                                                 TextStyle(color: Colors.white),
                                           ),
@@ -343,51 +355,57 @@ class _homeScreenState extends State<homeScreen> {
                     ),
                     Consumer(
                       builder: (context, WeatherProvider value, child) {
-                        return Container(
-                          width: 80.w,
-                          height: 9.5.h,
-                          decoration: BoxDecoration(
-                              color: Color(0xff1500ff).withOpacity(0.7),
-                              borderRadius: BorderRadius.circular(3.w)),
-                          child: Row(
-                            children: [
-                              Image.network(
-                                  "https://openweathermap.org/img/wn/${value.response.weather![0].icon!}@2x.png"),
-                              Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    margin: EdgeInsets.only(top: 5),
-                                    width: 50.w,
-                                    height: 4.h,
-                                    //  value.hresponse.list![index]
-                                    // .weather![0].main
-                                    child: Text(
-                                      value.hresponse.list![0].weather![0].main
-                                          .toString(),
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w500,
-                                          color: Colors.white),
-                                    ),
-                                  ),
-                                  Spacer(),
-                                  SizedBox(
-                                    width: 50.w,
-                                    height: 4.2.h,
-                                    child: Text(
-                                      "Jangan lupa bawa payung ya",
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontStyle: FontStyle.italic),
-                                    ),
-                                  )
-                                ],
-                              )
-                            ],
-                          ),
-                        );
+                        return value.isTodayLoading == false
+                            ? Text("sa")
+                            : Container(
+                                width: 80.w,
+                                height: 9.5.h,
+                                decoration: BoxDecoration(
+                                    color: Color(0xff1500ff).withOpacity(0.7),
+                                    borderRadius: BorderRadius.circular(3.w)),
+                                child: Row(
+                                  children: [
+                                    Image.network(
+                                        "https://openweathermap.org/img/wn/${value.response.weather![0].icon!}@2x.png"),
+                                    Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Container(
+                                            margin: EdgeInsets.only(top: 5),
+                                            width: 50.w,
+                                            height: 4.h,
+                                            //  value.hresponse.list![index]
+                                            // .weather![0].main
+                                            child: value.isTodayLoading == false
+                                                ? Text(
+                                                    value.hresponse.list![0]
+                                                        .weather![0].main
+                                                        .toString(),
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        color: Colors.white),
+                                                  )
+                                                : Text("as")),
+                                        Spacer(),
+                                        SizedBox(
+                                          width: 50.w,
+                                          height: 4.2.h,
+                                          child: Text(
+                                            "Jangan lupa bawa payung ya",
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontStyle: FontStyle.italic),
+                                          ),
+                                        )
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              );
                       },
                     ),
                     SizedBox(
@@ -460,7 +478,7 @@ class _homeScreenState extends State<homeScreen> {
                                                       .split(" ")
                                                       .last
                                                       .toString()
-                                                      .substring(9),
+                                                      .substring(2),
                                                   style: TextStyle(
                                                       fontWeight:
                                                           FontWeight.bold,
@@ -479,7 +497,7 @@ class _homeScreenState extends State<homeScreen> {
                                                       .last
                                                       .toString()
                                                       .substring(
-                                                        12,
+                                                        4,
                                                       ),
                                                   style: TextStyle(
                                                       fontStyle:

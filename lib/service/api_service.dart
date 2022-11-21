@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:weather_myapp/models/geocoding.dart';
 import 'package:weather_myapp/provider/weather_provider.dart';
+import 'package:weather_myapp/service/api_key.dart';
 import 'package:weather_myapp/service/logging.dart';
 
 import '../models/geocoding.dart';
@@ -16,32 +17,40 @@ final Dio _dio = Dio(BaseOptions(
   ..interceptors.add(Logging());
 
 @override
-Future<geocodingModel?> getCurrentData(String context) async {
-  geocodingModel weatherModel;
+Future<dynamic> getCurrentData(String context) async {
+  var weatherModel;
 
+  String keyCurrent = apiKeyCurrent;
   city = context.toString();
 
-  final response = await _dio.get(
-      "https://api.openweathermap.org/data/2.5/weather?q=$city&appid=33a5bfc0e1e90e645d0ca3bb5ad1c70e"
-      "&units=metric");
-  weatherModel = geocodingModel.fromJson(response.data);
-  return weatherModel;
+  try {
+    final response = await _dio.get(
+        "https://api.openweathermap.org/data/2.5/weather?q=$city&appid=$keyCurrent"
+        "&units=metric");
+    weatherModel = geocodingModel.fromJson(response.data);
+
+    return weatherModel;
+  } catch (e) {
+    return e;
+  }
 }
 
 @override
 Future<dynamic> getHourlyData(context) async {
-  HovercastReader? hourlyModel;
+  var hourlyModel;
+  String keyHourly = apiKeyHovercast;
 
   try {
     final response = await _dio.get(
-        "https://api.openweathermap.org/data/2.5/forecast?q=$city&appid=07de6e352cc77e781ec578c937639967"
+        "https://api.openweathermap.org/data/2.5/forecast?q=$city&appid=$keyHourly"
         "&units=metric");
 
     hourlyModel = HovercastReader.fromJson(response.data);
 
     return hourlyModel;
   } catch (e) {
-    log(e.toString());
+    if (e is DioError) {
+      return e;
+    }
   }
-  return null;
 }
